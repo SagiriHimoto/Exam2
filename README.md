@@ -25,8 +25,4 @@ as well as dropdown menus that allow you to choose between multiple option of so
  - Raw (Presents pairs as `[{Key: Value}]`)
  - JSON-ish (Presents pairs as `Key: Value`)
  
-You are also able to use your keyboard (doesn't trigger mobile or gaming console virtual keyboard features) to use special keybinds such as:
-**Backspace**: Acts the same as the on-screen "Remove Selected" button;
-**F8**: Generates a pair with random key and value. (usefull for testing);
-**F9**: Switches between Day(White) and Night(Dark Blue) themes;
-**F10**: Enable and disables *Debug Mode*. Only changes the color a few elements and how console logging acts (usefull for testing);
+You are also able to use your keyboard (doesn't trigger mobile or gaming console virtual keyboard features) to use special keybinds such as:<br/>**Backspace**: Acts the same as the on-screen "Remove Selected" button;<br/>**F8**: Generates a pair with random key and value. (usefull for testing);<br/>**F9**: Switches between Day(White) and Night(Dark Blue) themes;<br/>**F10**: Enable and disables *Debug Mode*. Only changes the color a few elements and how console logging acts (usefull for testing);
