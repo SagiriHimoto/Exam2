@@ -12,13 +12,15 @@ You are also presented with minimalistic UI, for basic operations, like buttons 
 - Clear all pairs in output
 
 as well as dropdown menus that allow you to choose between multiple option of sorting your pairs and presenting them. The options are
-- Sorting Options
+
+**Sorting Options**
  - No sort (all new pairs appear at the bottom)
  - Key A > B (sort all pairs by first value in alphabetical order)
  - Key A < B (sort all pairs by first value in reverse order)
  - Value A > B (sort all pairs by second value in alphabetical order)
  - Value A < B (sort all pairs by second value in reverse order)
-- Output Presentation Options
+
+**Output Presentation Options**
  - Default (Presents pairs as `Key=Value`)
  - Raw (Presents pairs as `[{Key: Value}]`)
  - JSON-ish (Presents pairs as `Key: Value`)
