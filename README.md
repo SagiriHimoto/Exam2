@@ -32,6 +32,6 @@ as well as dropdown menus that allow you to choose between multiple option of so
 and now (since V1.2) you are also able tick a checkbox:
 
 **Add "=" on Enter**
-A qol (quality of life) feature that was requested by testers. This feature is enabled by default, and it will check if what you're entering has an equal sign (=), and if it doesn't, it will be placed automatically (if the input query is selected)
+- A qol (quality of life) feature that was requested by testers. This feature is enabled by default, and it will check if what you're entering has an equal sign (=), and if it doesn't, it will be placed automatically (if the input query is selected)
  
 You are also able to use your keyboard (doesn't trigger mobile or gaming console virtual keyboard features) to use special keybinds such as:<br/>**Enter**: Acts the same as the on-screen "Add" button; (V1.2+)<br/>**Backspace**: Acts the same as the on-screen "Remove Selected" button;<br/>**F8**: Generates a pair with random key and value. (usefull for testing);<br/>**F9**: Switches between Day(White) and Night(Dark Blue) themes;<br/>**F10**: Enable and disables *Debug Mode*. Only changes the color a few elements and how console logging acts (usefull for testing);
