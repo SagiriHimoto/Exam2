@@ -1,26 +1,60 @@
-const keyInput = document.getElementById("valuename");
-const addButton = document.getElementById("addButton");
-const resultTextArea = document.getElementById("showthemwhereitsat");
-const viewSelector = document.getElementById("viewSelect");
-const sortSelector = document.getElementById("sortSelect");
+const KeyInput = document.getElementById("ValueName");
+const AddButton = document.getElementById("AddButton");
+const ResultTextArea = document.getElementById("ShowThemWhereItsAt");
+const ViewSelector = document.getElementById("ViewSelect");
+const SortSelector = document.getElementById("SortSelect");
 /* chars value is used as a pool of characters when making random entries by pressing F8 */
 var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var BiggyListyThingy = [];
-var DebugMode = false;
+var DebugMode = true;
 var ThemeMode = false;
 var CursorPos = 0;
+var FocusInput = true;
+
+/* This works as mobile css */
+const EvilListOfEvil = [/Android/i,/iPhone/i,/iPad/i,/iPod/i,/BlackBerry/i,/Windows Phone/i,/webOS/i];
+function CheckUserAgentOrWindowSize() {
+    if(visualViewport.width < visualViewport.height || EvilListOfEvil.some((ItemFromEvilListOfEvil) => {return navigator.userAgent.match(ItemFromEvilListOfEvil);})) {
+		if(DebugMode){
+			console.log("Phone! Screen Resized ",visualViewport.width,"x",visualViewport.height)
+			document.documentElement.style.setProperty('--body-padding', '0px')
+			document.documentElement.style.setProperty('--body-row-direction', 'column')
+			document.documentElement.style.setProperty('--cntainr-width', '100%')
+			document.documentElement.style.setProperty('--cntainr-align-items', 'start')
+			document.documentElement.style.setProperty('--cntainr2-width', 'calc(100% - 40px)')
+			document.documentElement.style.setProperty('--cntainr2-padding-bottom', '0px')
+			document.documentElement.style.setProperty('--namesakes-display', 'none')
+			document.documentElement.style.setProperty('--outputresult-width', 'calc(100% - 4px)')
+			document.documentElement.style.setProperty('--inputstuff-width', 'calc(100% - 8px)')
+		}
+	} else {
+		if(DebugMode){
+			console.log("Desktop! Screen Resized ",visualViewport.width,"x",visualViewport.height)
+			document.documentElement.style.setProperty('--body-padding', '40px')
+			document.documentElement.style.setProperty('--body-row-direction', 'row-reverse')
+			document.documentElement.style.setProperty('--cntainr-width', '60vw')
+			document.documentElement.style.setProperty('--cntainr-align-items', 'center')
+			document.documentElement.style.setProperty('--cntainr2-width', '20w')
+			document.documentElement.style.setProperty('--cntainr2-padding-bottom', '20px')
+			document.documentElement.style.setProperty('--namesakes-display', 'block')
+			document.documentElement.style.setProperty('--outputresult-width', '95%')
+			document.documentElement.style.setProperty('--inputstuff-width', '95%')
+		}
+	}
+}
+window.onresize = CheckUserAgentOrWindowSize
 
 function ToggleDebugMode() {
 	if (DebugMode) {
 		DebugMode = false;
-		document.getElementById("toaster").style.top = "-60px";
+		document.getElementById("Toaster").style.top = "-60px";
 		document.querySelector(".cntainr2").style.backgroundColor = "var(--dark-color)"
 	} else {
 		DebugMode = true;
-		document.getElementById("toaster").style.top = "0px";
+		document.getElementById("Toaster").style.top = "0px";
 		document.querySelector(".cntainr2").style.backgroundColor = "var(--darkest-color)"
 	}
-	document.querySelector("#toaster").innerText = "Debug Mode: " + DebugMode;
+	document.querySelector("#Toaster").innerText = "Debug Mode: " + DebugMode;
 	console.log("Debug Mode: " + DebugMode)
 }
 function ToggleThemeMode() {
@@ -42,40 +76,44 @@ function ToggleThemeMode() {
 function RemoveSelected() {
 	let ErasedAmount = 0;
 	/* ^ This is here to avoid this function deleting an entry and skipping the next one because of out of sync indexing */
-	for (let i=1;i<=document.querySelector("#showthemwhereitsat").childElementCount;i++) {
-		if (DebugMode) {console.log("Child" + i + "is" +window.getSelection().containsNode(document.querySelector("#showthemwhereitsat > p:nth-child("+i+")"), true))}
-		if (window.getSelection().containsNode(document.querySelector("#showthemwhereitsat > p:nth-child("+i+")"))){
+	for (let i=1;i<=ResultTextArea.childElementCount;i++) {
+		if (DebugMode) {console.log("Child" + i + "is" +window.getSelection().containsNode(document.querySelector("#ShowThemWhereItsAt > p:nth-child("+i+")"), true))}
+		if (window.getSelection().containsNode(document.querySelector("#ShowThemWhereItsAt > p:nth-child("+i+")"))){
 			BiggyListyThingy.splice(i-ErasedAmount-1,1);
 			ErasedAmount++;
-		} else if (window.getSelection().anchorNode.data == document.querySelector("#showthemwhereitsat > p:nth-child("+i+")").innerText){
+			event.preventDefault()
+		} else if (window.getSelection().anchorNode.data == document.querySelector("#ShowThemWhereItsAt > p:nth-child("+i+")").innerText){
 			if (window.getSelection().anchorOffset != window.getSelection().anchorNode.data.length) {BiggyListyThingy.splice(i-ErasedAmount-1,1)
-			ErasedAmount++;}
-		} else if (window.getSelection().focusNode.data == document.querySelector("#showthemwhereitsat > p:nth-child("+i+")").innerText){
+			ErasedAmount++;
+			event.preventDefault()}
+		} else if (window.getSelection().focusNode.data == document.querySelector("#ShowThemWhereItsAt > p:nth-child("+i+")").innerText){
 			if (window.getSelection().focusOffset != window.getSelection().focusNode.data.length) {BiggyListyThingy.splice(i-ErasedAmount-1,1)
-			ErasedAmount++;}
+			ErasedAmount++;
+			event.preventDefault()}
+			/* preventDefault() doesn't do anything when triggered by button,so conditioning is not needed */
 		}
 	}
-	redrawTextarea()
+	RedrawTextArea()
 }
 /* Removes the first Key and Value in array */
 function RemoveFirst() {
 	BiggyListyThingy.splice(0,1);
-	redrawTextarea()
+	RedrawTextArea()
 }
 /* Removes the last Key and Value in array */
 function RemoveLast() {
 	BiggyListyThingy.splice(BiggyListyThingy.length-1,1);
-	redrawTextarea()
+	RedrawTextArea()
 }
 function RemoveAll() {
 	BiggyListyThingy = [];
-	redrawTextarea()
+	RedrawTextArea()
 }
 /* This big fella is the one doing the sorting and typing the text when it needs an update */
-function redrawTextarea() {
+function RedrawTextArea() {
 	let formattedOutput = '';
 	let SortedBiggyListyThingy = '';
-	switch(sortSelector.value) {
+	switch(SortSelector.value) {
 		case 'None':
 		SortedBiggyListyThingy = BiggyListyThingy
 		break;
@@ -92,7 +130,7 @@ function redrawTextarea() {
 		SortedBiggyListyThingy = BiggyListyThingy.sort((a, b)=> b.Value.localeCompare(a.Value, 'en', { sensitivity: 'base' }))
 		break;
 	}
-	switch(viewSelector.value) {
+	switch(ViewSelector.value) {
 	case "Okten":
 	formattedOutput = SortedBiggyListyThingy.map(entry => `${Object.values(entry)[0]}=${Object.values(entry)[1]}`).join("\n");
 	break;
@@ -103,27 +141,31 @@ function redrawTextarea() {
 	formattedOutput = "[" + SortedBiggyListyThingy.map(entry => `{Key: ${Object.values(entry)[0]}, Value: ${Object.values(entry)[1]}}`).join(",\n") + "]";
 	break;
 	}
-	resultTextArea.innerText = '';
+	ResultTextArea.innerText = '';
 	for(let i=0;i < formattedOutput.split("\n").length;i++){
-		resultTextArea.innerHTML += "<p>" + formattedOutput.split("\n")[i] + "</p>"
+		ResultTextArea.innerHTML += "<p>" + formattedOutput.split("\n")[i].replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;') + "</p>";/* This is done a separate step from join(), to prevent a bug with "Raw" display's square bracket apearing outside the paragraph. Paragraph tag opener could be placed in the previous step, but for consistency and more intuitive coding, I chose not to */
 	}
 	if (DebugMode) {console.log(formattedOutput)}
-	resultTextArea.style.height = resultTextArea.scrollHeight - 4 + "px";
+	ResultTextArea.style.height = ResultTextArea.scrollHeight - 4 + "px";
 };
 /* Checks if add button was pressed, duh */
-addButton.addEventListener("click", () => {
-	if (keyInput.value.indexOf("=") == -1) {
-		if (DebugMode) {console.log("Value has no = sign, returned as error")}
+AddButton.addEventListener("click", () => {
+	if (KeyInput.value.indexOf("=") == -1) {
+		if (document.getElementById("AddEqual").checked) {KeyInput.value += "="} else
+		{if (DebugMode) {console.log("Value has no = sign, returned as error")}}
 		return;
 	}
-	let key = keyInput.value.split("=")[0].trim();
-	let value = keyInput.value.split("=")[1].trim();
+	let key = KeyInput.value.split("=")[0].trim();
+	let value = KeyInput.value.split("=")[1].trim();
 	let newEntry = { Key: key,Value: value };
 	BiggyListyThingy.push(newEntry);
-	redrawTextarea();
-	keyInput.value = "";
-	keyInput.focus();
+	RedrawTextArea();
+	KeyInput.value = "";
+	KeyInput.focus();
 });
+KeyInput.addEventListener("focusin", (event) => {FocusInput = true;if(DebugMode){console.log("Currently inputing")}});
+KeyInput.addEventListener("focusout", (event) => {FocusInput = false;if(DebugMode){console.log("No longer inputing")}});
+/* ^^ using event listeners, because :state() is too new, and not supported on even slightly outdated browser versions */
 document.addEventListener("keydown", KeyPresser);
 function KeyPresser(event) {
 	if (DebugMode) {
@@ -144,29 +186,10 @@ function KeyPresser(event) {
 		}
 		let newEntry = { Key: key,Value: value };
 		BiggyListyThingy.push(newEntry);
-		redrawTextarea();
+		RedrawTextArea();
 		break;
 		case "Backspace":
-		/* Backspace doesn't use RemoveSelected() as that caused a bug during testing */
-		let ErasedAmount = 0;
-		/* ^ This is here to avoid this function deleting an entry and skipping the next one because of out of sync indexing */
-		for (let i=1;i<=document.querySelector("#showthemwhereitsat").childElementCount;i++) {
-			if (DebugMode) {console.log("Child" + i + "is" +window.getSelection().containsNode(document.querySelector("#showthemwhereitsat > p:nth-child("+i+")"), true))}
-			if (window.getSelection().containsNode(document.querySelector("#showthemwhereitsat > p:nth-child("+i+")"))){
-				BiggyListyThingy.splice(i-ErasedAmount-1,1);
-				ErasedAmount++;
-				event.preventDefault()
-			} else if (window.getSelection().anchorNode.data == document.querySelector("#showthemwhereitsat > p:nth-child("+i+")").innerText){
-				if (window.getSelection().anchorOffset != window.getSelection().anchorNode.data.length) {BiggyListyThingy.splice(i-ErasedAmount-1,1)
-				ErasedAmount++;
-				event.preventDefault()}
-			} else if (window.getSelection().focusNode.data == document.querySelector("#showthemwhereitsat > p:nth-child("+i+")").innerText){
-				if (window.getSelection().focusOffset != window.getSelection().focusNode.data.length) {BiggyListyThingy.splice(i-ErasedAmount-1,1)
-				ErasedAmount++;
-				event.preventDefault()}
-			}
-		}
-		redrawTextarea()
+		RemoveSelected()
 		break;
 		case "F9":
 		event.preventDefault()
@@ -181,6 +204,9 @@ function KeyPresser(event) {
 		if (confirm("Are you sure you want to reload the page? Your progress will be lost!!!!")) {
 			window.location.reload();
 		}}
+		break;
+		case "Enter":
+		if(FocusInput){AddButton.click()}
 		break;
 	}
 };
